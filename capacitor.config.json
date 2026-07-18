@@ -1,0 +1,9 @@
+{
+  "appId": "com.skillin.app",
+  "appName": "SkillIn",
+  "webDir": "dist",
+  "server": {
+    "url": "https://lighthearted-moonbeam-85ea9a.netlify.app",
+    "cleartext": false
+  }
+}

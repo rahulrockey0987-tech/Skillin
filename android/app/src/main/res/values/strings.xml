@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SkillIn</string>
+    <string name="title_activity_main">SkillIn</string>
+    <string name="package_name">com.skillin.app</string>
+    <string name="custom_url_scheme">com.skillin.app</string>
+</resources>
