@@ -10,6 +10,8 @@ export default function Login() {
     password: "",
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -20,20 +22,45 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!form.email || !form.password) {
+      alert("Please enter email and password");
+      return;
+    }
+
+    setLoading(true);
+
     try {
       const res = await axios.post(
         "https://skilllin-server.onrender.com/api/auth/login",
-        form
+        form,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
+      console.log(res.data);
 
-      alert("Login Successful");
-      navigate("/dashboard");
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
+        alert("Login Successful");
+        navigate("/dashboard");
+      } else {
+        alert(res.data.message);
+      }
     } catch (err) {
-      alert(err.response?.data?.message || "Login Failed");
+      console.log(err.response);
+
+      alert(
+        err.response?.data?.message ||
+          "Unable to login. Please check your email and password."
+      );
     }
+
+    setLoading(false);
   };
 
   return (
@@ -44,44 +71,49 @@ export default function Login() {
         justifyContent: "center",
         alignItems: "center",
         background:
-          "linear-gradient(135deg, #0f172a 0%, #1d4ed8 50%, #06b6d4 100%)",
+          "linear-gradient(135deg,#1d4ed8,#2563eb,#06b6d4)",
+        padding: "20px",
       }}
     >
       <form
         onSubmit={handleSubmit}
         style={{
-          width: "380px",
-          background: "white",
-          padding: "30px",
+          width: "420px",
+          background: "#ffffff",
+          padding: "35px",
           borderRadius: "15px",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
+          boxShadow: "0 15px 40px rgba(0,0,0,0.25)",
         }}
       >
         <h1
           style={{
             textAlign: "center",
             color: "#2563eb",
-            marginBottom: "25px",
+            marginBottom: "30px",
+            fontWeight: "700",
           }}
         >
-          Login
+          SkillIn Login
         </h1>
 
         <input
           type="email"
           name="email"
-          placeholder="Email"
+          placeholder="Enter Email"
           value={form.email}
           onChange={handleChange}
+          required
           style={{
             width: "100%",
-            padding: "12px",
-            marginBottom: "15px",
-            border: "1px solid #cbd5e1",
-            borderRadius: "8px",
-            color: "black",
-            background: "white",
+            padding: "14px",
+            border: "2px solid #d1d5db",
+            borderRadius: "10px",
+            marginBottom: "18px",
             fontSize: "16px",
+            background: "#ffffff",
+            color: "#000000",
+            caretColor: "#000000",
+            outline: "none",
             boxSizing: "border-box",
           }}
         />
@@ -89,37 +121,62 @@ export default function Login() {
         <input
           type="password"
           name="password"
-          placeholder="Password"
+          placeholder="Enter Password"
           value={form.password}
           onChange={handleChange}
+          required
           style={{
             width: "100%",
-            padding: "12px",
-            marginBottom: "20px",
-            border: "1px solid #cbd5e1",
-            borderRadius: "8px",
-            color: "black",
-            background: "white",
+            padding: "14px",
+            border: "2px solid #d1d5db",
+            borderRadius: "10px",
+            marginBottom: "25px",
             fontSize: "16px",
+            background: "#ffffff",
+            color: "#000000",
+            caretColor: "#000000",
+            outline: "none",
             boxSizing: "border-box",
           }}
         />
 
         <button
           type="submit"
+          disabled={loading}
           style={{
             width: "100%",
-            padding: "12px",
+            padding: "14px",
             background: "#2563eb",
-            color: "white",
+            color: "#ffffff",
             border: "none",
-            borderRadius: "8px",
+            borderRadius: "10px",
+            fontSize: "18px",
             cursor: "pointer",
-            fontSize: "16px",
+            fontWeight: "600",
           }}
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
+
+        <p
+          style={{
+            textAlign: "center",
+            marginTop: "20px",
+            color: "#475569",
+          }}
+        >
+          Don't have an account?{" "}
+          <span
+            onClick={() => navigate("/register")}
+            style={{
+              color: "#2563eb",
+              cursor: "pointer",
+              fontWeight: "600",
+            }}
+          >
+            Register
+          </span>
+        </p>
       </form>
     </div>
   );
