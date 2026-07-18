@@ -81,14 +81,14 @@ export default function Register() {
           boxShadow: "0 15px 40px rgba(0,0,0,.25)",
         }}
       >
-        <h1
+ <h1
   style={{
-    color: "red",
-    fontSize: "50px",
     textAlign: "center",
+    color: "#2563eb",
+    marginBottom: "10px",
   }}
 >
-  TEST PAGE
+  Create Account
 </h1>
 
         <p
