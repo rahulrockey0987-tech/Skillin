@@ -22,27 +22,19 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.email.trim() || !form.password) {
+    if (!form.email.trim() || !form.password.trim()) {
       alert("Please enter email and password");
       return;
     }
 
-    setLoading(true);
-
     try {
-      const loginData = {
-        email: form.email.trim().toLowerCase(),
-        password: form.password,
-      };
+      setLoading(true);
 
       const res = await axios.post(
         "https://skillin-server.onrender.com/api/auth/login",
-        loginData,
         {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          timeout: 15000,
+          email: form.email.trim().toLowerCase(),
+          password: form.password,
         }
       );
 
@@ -56,22 +48,10 @@ export default function Login() {
         alert(res.data.message);
       }
     } catch (err) {
-      console.log("Login Error:", err);
-
-      if (err.response) {
-        alert(
-          `Status: ${err.response.status}\nMessage: ${
-            err.response.data.message || "Login Failed"
-          }`
-        );
-      } else if (err.request) {
-        alert("Unable to connect to server.");
-      } else {
-        alert(err.message);
-      }
+      alert(err.response?.data?.message || "Login Failed");
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
@@ -81,8 +61,7 @@ export default function Login() {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        background:
-          "linear-gradient(135deg,#1d4ed8,#2563eb,#06b6d4)",
+        background: "linear-gradient(135deg,#1d4ed8,#2563eb,#06b6d4)",
         padding: "20px",
       }}
     >
@@ -90,7 +69,8 @@ export default function Login() {
         onSubmit={handleSubmit}
         style={{
           width: "420px",
-          background: "#fff",
+          maxWidth: "100%",
+          background: "#ffffff",
           padding: "35px",
           borderRadius: "15px",
           boxShadow: "0 15px 40px rgba(0,0,0,0.25)",
@@ -110,16 +90,22 @@ export default function Login() {
           type="email"
           name="email"
           placeholder="Enter Email"
+          autoComplete="email"
           value={form.email}
           onChange={handleChange}
-          autoComplete="email"
+          required
           style={{
             width: "100%",
             padding: "14px",
+            marginBottom: "18px",
             border: "2px solid #d1d5db",
             borderRadius: "10px",
-            marginBottom: "18px",
+            backgroundColor: "#ffffff",
+            color: "#000000",
+            WebkitTextFillColor: "#000000",
+            caretColor: "#000000",
             fontSize: "16px",
+            outline: "none",
             boxSizing: "border-box",
           }}
         />
@@ -128,16 +114,22 @@ export default function Login() {
           type="password"
           name="password"
           placeholder="Enter Password"
+          autoComplete="current-password"
           value={form.password}
           onChange={handleChange}
-          autoComplete="current-password"
+          required
           style={{
             width: "100%",
             padding: "14px",
+            marginBottom: "25px",
             border: "2px solid #d1d5db",
             borderRadius: "10px",
-            marginBottom: "25px",
+            backgroundColor: "#ffffff",
+            color: "#000000",
+            WebkitTextFillColor: "#000000",
+            caretColor: "#000000",
             fontSize: "16px",
+            outline: "none",
             boxSizing: "border-box",
           }}
         />
@@ -149,11 +141,12 @@ export default function Login() {
             width: "100%",
             padding: "14px",
             background: "#2563eb",
-            color: "#fff",
+            color: "#ffffff",
             border: "none",
             borderRadius: "10px",
             fontSize: "18px",
             cursor: "pointer",
+            fontWeight: "600",
           }}
         >
           {loading ? "Logging in..." : "Login"}
@@ -163,6 +156,7 @@ export default function Login() {
           style={{
             textAlign: "center",
             marginTop: "20px",
+            color: "#475569",
           }}
         >
           Don't have an account?{" "}
@@ -171,7 +165,7 @@ export default function Login() {
             style={{
               color: "#2563eb",
               cursor: "pointer",
-              fontWeight: "bold",
+              fontWeight: "600",
             }}
           >
             Register
