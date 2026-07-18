@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
+const API = "https://skilllin-server.onrender.com/api";
+
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);
   const [search, setSearch] = useState("");
@@ -9,18 +11,22 @@ export default function Jobs() {
     fetchJobs();
   }, []);
 
+  // =============================
   // Fetch Jobs
+  // =============================
   const fetchJobs = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/jobs");
+      const res = await axios.get(`${API}/jobs`);
       setJobs(res.data);
     } catch (err) {
-      console.log(err);
-      alert("Failed to load jobs");
+      console.error(err);
+      alert("Failed to load jobs.");
     }
   };
 
+  // =============================
   // Apply Job
+  // =============================
   const applyJob = async (jobId) => {
     try {
       const token = localStorage.getItem("token");
@@ -31,7 +37,7 @@ export default function Jobs() {
       }
 
       const res = await axios.post(
-        "http://localhost:5000/api/applications/apply",
+        `${API}/applications/apply`,
         { jobId },
         {
           headers: {
@@ -40,16 +46,16 @@ export default function Jobs() {
         }
       );
 
-      alert(res.data.message);
-
+      alert(res.data.message || "Application submitted successfully.");
     } catch (err) {
-      alert(
-        err.response?.data?.message || "Application failed."
-      );
+      console.error(err);
+      alert(err.response?.data?.message || "Application failed.");
     }
   };
 
+  // =============================
   // Search Filter
+  // =============================
   const filteredJobs = jobs.filter(
     (job) =>
       job.title?.toLowerCase().includes(search.toLowerCase()) ||
@@ -59,6 +65,7 @@ export default function Jobs() {
 
   return (
     <div className="min-h-screen bg-slate-950 text-white p-8">
+
       <h1 className="text-4xl font-bold text-cyan-400 mb-2">
         Student Job Portal
       </h1>
@@ -90,6 +97,7 @@ export default function Jobs() {
             >
               <div className="flex justify-between">
                 <div className="w-full">
+
                   <div className="flex items-center gap-4">
                     <div className="text-5xl">💼</div>
 
@@ -106,28 +114,29 @@ export default function Jobs() {
 
                   <div className="mt-5 space-y-2">
                     <p>📍 {job.location}</p>
-
                     <p>💰 {job.salary}</p>
-
                     <p>💼 {job.jobType}</p>
                   </div>
 
-                  <div className="flex gap-2 mt-5 flex-wrap">
-                    {job.skills?.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full text-sm"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
+                  {job.skills?.length > 0 && (
+                    <div className="flex gap-2 mt-5 flex-wrap">
+                      {job.skills.map((skill, index) => (
+                        <span
+                          key={index}
+                          className="bg-cyan-500/20 text-cyan-300 px-3 py-1 rounded-full text-sm"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
                   <p className="mt-6 text-gray-300">
                     {job.description}
                   </p>
 
                   <div className="flex gap-4 mt-8">
+
                     <button
                       onClick={() => applyJob(job._id)}
                       className="bg-cyan-500 hover:bg-cyan-600 px-6 py-3 rounded-xl font-semibold transition"
@@ -140,13 +149,16 @@ export default function Jobs() {
                     >
                       Save Job
                     </button>
+
                   </div>
+
                 </div>
               </div>
             </div>
           ))
         )}
       </div>
+
     </div>
   );
 }
