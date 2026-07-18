@@ -1,0 +1,24 @@
+:root {
+  --primary: #06b6d4;
+  --secondary: #2563eb;
+  --dark: #020617;
+  --card: rgba(255,255,255,.08);
+}
+
+.glass {
+  background: rgba(255,255,255,.08);
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.gradient-text{
+  background: linear-gradient(90deg,#06b6d4,#3b82f6);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.section{
+  max-width:1280px;
+  margin:auto;
+  padding:100px 24px;
+}
