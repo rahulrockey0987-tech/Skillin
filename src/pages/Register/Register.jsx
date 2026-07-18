@@ -82,14 +82,14 @@ export default function Register() {
         }}
       >
         <h1
-          style={{
-            textAlign: "center",
-            color: "#2563eb",
-            marginBottom: "10px",
-          }}
-        >
-          Create Account
-        </h1>
+  style={{
+    color: "red",
+    fontSize: "50px",
+    textAlign: "center",
+  }}
+>
+  TEST PAGE
+</h1>
 
         <p
           style={{
