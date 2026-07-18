@@ -29,7 +29,7 @@ function Dashboard() {
   const fetchDashboard = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/dashboard"
+        "https://skilllin-server.onrender.com/api/dashboard"
       );
 
       setStats(res.data);
