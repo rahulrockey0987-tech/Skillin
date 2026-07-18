@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const API = "https://skilllin-server.onrender.com/api";
+const API = "https://skillin-server.onrender.com/api";
 
 export default function Jobs() {
   const [jobs, setJobs] = useState([]);

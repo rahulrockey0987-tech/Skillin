@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://skilllin-server.onrender.com/api",
+  baseURL: "https://skillin-server.onrender.com/api",
   headers: {
     "Content-Type": "application/json",
   },

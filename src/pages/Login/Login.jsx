@@ -22,7 +22,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.email || !form.password) {
+    if (!form.email.trim() || !form.password) {
       alert("Please enter email and password");
       return;
     }
@@ -30,17 +30,21 @@ export default function Login() {
     setLoading(true);
 
     try {
+      const loginData = {
+        email: form.email.trim().toLowerCase(),
+        password: form.password,
+      };
+
       const res = await axios.post(
-        "https://skilllin-server.onrender.com/api/auth/login",
-        form,
+        "https://skillin-server.onrender.com/api/auth/login",
+        loginData,
         {
           headers: {
             "Content-Type": "application/json",
           },
+          timeout: 15000,
         }
       );
-
-      console.log(res.data);
 
       if (res.data.success) {
         localStorage.setItem("token", res.data.token);
@@ -52,12 +56,19 @@ export default function Login() {
         alert(res.data.message);
       }
     } catch (err) {
-      console.log(err.response);
+      console.log("Login Error:", err);
 
-      alert(
-        err.response?.data?.message ||
-          "Unable to login. Please check your email and password."
-      );
+      if (err.response) {
+        alert(
+          `Status: ${err.response.status}\nMessage: ${
+            err.response.data.message || "Login Failed"
+          }`
+        );
+      } else if (err.request) {
+        alert("Unable to connect to server.");
+      } else {
+        alert(err.message);
+      }
     }
 
     setLoading(false);
@@ -79,7 +90,7 @@ export default function Login() {
         onSubmit={handleSubmit}
         style={{
           width: "420px",
-          background: "#ffffff",
+          background: "#fff",
           padding: "35px",
           borderRadius: "15px",
           boxShadow: "0 15px 40px rgba(0,0,0,0.25)",
@@ -90,7 +101,6 @@ export default function Login() {
             textAlign: "center",
             color: "#2563eb",
             marginBottom: "30px",
-            fontWeight: "700",
           }}
         >
           SkillIn Login
@@ -102,7 +112,7 @@ export default function Login() {
           placeholder="Enter Email"
           value={form.email}
           onChange={handleChange}
-          required
+          autoComplete="email"
           style={{
             width: "100%",
             padding: "14px",
@@ -110,10 +120,6 @@ export default function Login() {
             borderRadius: "10px",
             marginBottom: "18px",
             fontSize: "16px",
-            background: "#ffffff",
-            color: "#000000",
-            caretColor: "#000000",
-            outline: "none",
             boxSizing: "border-box",
           }}
         />
@@ -124,7 +130,7 @@ export default function Login() {
           placeholder="Enter Password"
           value={form.password}
           onChange={handleChange}
-          required
+          autoComplete="current-password"
           style={{
             width: "100%",
             padding: "14px",
@@ -132,10 +138,6 @@ export default function Login() {
             borderRadius: "10px",
             marginBottom: "25px",
             fontSize: "16px",
-            background: "#ffffff",
-            color: "#000000",
-            caretColor: "#000000",
-            outline: "none",
             boxSizing: "border-box",
           }}
         />
@@ -147,12 +149,11 @@ export default function Login() {
             width: "100%",
             padding: "14px",
             background: "#2563eb",
-            color: "#ffffff",
+            color: "#fff",
             border: "none",
             borderRadius: "10px",
             fontSize: "18px",
             cursor: "pointer",
-            fontWeight: "600",
           }}
         >
           {loading ? "Logging in..." : "Login"}
@@ -162,7 +163,6 @@ export default function Login() {
           style={{
             textAlign: "center",
             marginTop: "20px",
-            color: "#475569",
           }}
         >
           Don't have an account?{" "}
@@ -171,7 +171,7 @@ export default function Login() {
             style={{
               color: "#2563eb",
               cursor: "pointer",
-              fontWeight: "600",
+              fontWeight: "bold",
             }}
           >
             Register
