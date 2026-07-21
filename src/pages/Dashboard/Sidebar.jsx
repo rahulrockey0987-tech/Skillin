@@ -7,6 +7,8 @@ import {
   FaCog,
   FaSignOutAlt,
   FaTimes,
+  FaVideo,
+  FaPlayCircle,
 } from "react-icons/fa";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -22,39 +24,48 @@ export default function Sidebar({
     localStorage.removeItem("user");
     navigate("/login");
   };
-
-  const menu = [
-    {
-      name: "Dashboard",
-      icon: <FaHome />,
-      path: "/dashboard",
-    },
-    {
-      name: "Courses",
-      icon: <FaBook />,
-      path: "/courses",
-    },
-    {
-      name: "Internships",
-      icon: <FaGraduationCap />,
-      path: "/internships",
-    },
-    {
-      name: "Jobs",
-      icon: <FaBriefcase />,
-      path: "/jobs",
-    },
-    {
-      name: "Profile",
-      icon: <FaUser />,
-      path: "/profile",
-    },
-    {
-      name: "Settings",
-      icon: <FaCog />,
-      path: "/settings",
-    },
-  ];
+const menu = [
+  {
+    name: "Dashboard",
+    icon: <FaHome />,
+    path: "/dashboard",
+  },
+  {
+    name: "Courses",
+    icon: <FaBook />,
+    path: "/courses",
+  },
+  {
+    name: "Live Classes",
+    icon: <FaVideo />,
+    path: "/liveclasses",
+  },
+  {
+    name: "Recorded Videos",
+    icon: <FaPlayCircle />,
+    path: "/recordedclasses",
+  },
+  {
+    name: "Internships",
+    icon: <FaGraduationCap />,
+    path: "/internships",
+  },
+  {
+    name: "Jobs",
+    icon: <FaBriefcase />,
+    path: "/jobs",
+  },
+  {
+    name: "Profile",
+    icon: <FaUser />,
+    path: "/profile",
+  },
+  {
+    name: "Settings",
+    icon: <FaCog />,
+    path: "/settings",
+  },
+];
 
   return (
     <>

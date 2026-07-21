@@ -1,53 +1,52 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { FaBell, FaSearch, FaUserCircle } from "react-icons/fa";
 
-export default function Students() {
-  const [students, setStudents] = useState([]);
-
-  useEffect(() => {
-    fetchStudents();
-  }, []);
-
-  const fetchStudents = async () => {
-    try {
-      const res = await axios.get(
-        "http://localhost:5000/api/auth/users"
-      );
-      setStudents(res.data.users);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+export default function Topbar() {
+  const admin = JSON.parse(localStorage.getItem("user")) || {};
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">
-        Registered Students
-      </h1>
+    <header className="bg-white shadow px-6 py-4 flex items-center justify-between">
+      {/* Left */}
+      <div>
+        <h1 className="text-2xl font-bold text-gray-800">
+          Admin Dashboard
+        </h1>
+        <p className="text-sm text-gray-500">
+          Welcome, {admin.name || "Admin"}
+        </p>
+      </div>
 
-      <table className="w-full border border-gray-300">
-        <thead className="bg-blue-600 text-white">
-          <tr>
-            <th className="p-3">Name</th>
-            <th className="p-3">Email</th>
-            <th className="p-3">College</th>
-            <th className="p-3">Phone</th>
-            <th className="p-3">Role</th>
-          </tr>
-        </thead>
+      {/* Center */}
+      <div className="hidden md:flex items-center bg-gray-100 rounded-lg px-3 py-2 w-96">
+        <FaSearch className="text-gray-500 mr-2" />
+        <input
+          type="text"
+          placeholder="Search students, jobs, courses..."
+          className="bg-transparent outline-none w-full"
+        />
+      </div>
 
-        <tbody>
-          {students.map((student) => (
-            <tr key={student._id} className="border-b">
-              <td className="p-3">{student.name}</td>
-              <td className="p-3">{student.email}</td>
-              <td className="p-3">{student.college || "-"}</td>
-              <td className="p-3">{student.phone || "-"}</td>
-              <td className="p-3">{student.role}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+      {/* Right */}
+      <div className="flex items-center gap-6">
+        <button className="relative">
+          <FaBell className="text-2xl text-gray-600 hover:text-blue-600" />
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+            3
+          </span>
+        </button>
+
+        <div className="flex items-center gap-3">
+          <FaUserCircle className="text-4xl text-blue-600" />
+
+          <div className="hidden sm:block">
+            <h2 className="font-semibold">
+              {admin.name || "Administrator"}
+            </h2>
+            <p className="text-sm text-gray-500">
+              {admin.email || "admin@skillin.com"}
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
   );
 }
