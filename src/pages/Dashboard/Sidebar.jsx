@@ -6,11 +6,15 @@ import {
   FaUser,
   FaCog,
   FaSignOutAlt,
+  FaTimes,
 } from "react-icons/fa";
 
 import { Link, useNavigate } from "react-router-dom";
 
-function Sidebar() {
+export default function Sidebar({
+  sidebarOpen,
+  setSidebarOpen,
+}) {
   const navigate = useNavigate();
 
   const logout = () => {
@@ -19,75 +23,115 @@ function Sidebar() {
     navigate("/login");
   };
 
+  const menu = [
+    {
+      name: "Dashboard",
+      icon: <FaHome />,
+      path: "/dashboard",
+    },
+    {
+      name: "Courses",
+      icon: <FaBook />,
+      path: "/courses",
+    },
+    {
+      name: "Internships",
+      icon: <FaGraduationCap />,
+      path: "/internships",
+    },
+    {
+      name: "Jobs",
+      icon: <FaBriefcase />,
+      path: "/jobs",
+    },
+    {
+      name: "Profile",
+      icon: <FaUser />,
+      path: "/profile",
+    },
+    {
+      name: "Settings",
+      icon: <FaCog />,
+      path: "/settings",
+    },
+  ];
+
   return (
-    <aside className="w-72 bg-slate-900 border-r border-slate-800 min-h-screen flex flex-col">
-      <div className="p-8">
-        <h1 className="text-4xl font-bold text-cyan-400">
-          SkillIn
-        </h1>
-      </div>
+    <>
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          onClick={() => setSidebarOpen(false)}
+          className="fixed inset-0 bg-black/60 z-40 md:hidden"
+        />
+      )}
 
-      <nav className="flex-1 px-5">
-        <Link
-          to="/dashboard"
-          className="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-800 transition"
-        >
-          <FaHome />
-          Dashboard
-        </Link>
+      {/* Sidebar */}
+      <aside
+        className={`
+        fixed md:relative
+        top-0 left-0
+        h-screen
+        w-72
+        bg-slate-900
+        border-r
+        border-slate-800
+        z-50
+        transform
+        transition-transform
+        duration-300
+        ${
+          sidebarOpen
+            ? "translate-x-0"
+            : "-translate-x-full md:translate-x-0"
+        }
+      `}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-slate-800">
+          <h1 className="text-3xl font-bold text-cyan-400">
+            SkillIn
+          </h1>
 
-        <Link
-          to="/courses"
-          className="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-800 transition"
-        >
-          <FaBook />
-          Courses
-        </Link>
+          <button
+            onClick={() => setSidebarOpen(false)}
+            className="md:hidden text-2xl text-white"
+          >
+            <FaTimes />
+          </button>
+        </div>
 
-        <Link
-          to="/internships"
-          className="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-800 transition"
-        >
-          <FaGraduationCap />
-          Internships
-        </Link>
+        {/* Navigation */}
+        <nav className="mt-6 px-4 space-y-2">
+          {menu.map((item) => (
+            <Link
+              key={item.name}
+              to={item.path}
+              onClick={() => setSidebarOpen(false)}
+              className="flex items-center gap-4 p-4 rounded-xl hover:bg-cyan-500 hover:text-white transition-all duration-300"
+            >
+              <span className="text-xl">
+                {item.icon}
+              </span>
 
-        <Link
-          to="/jobs"
-          className="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-800 transition"
-        >
-          <FaBriefcase />
-          Jobs
-        </Link>
+              <span className="font-medium">
+                {item.name}
+              </span>
+            </Link>
+          ))}
+        </nav>
 
-        <Link
-          to="/profile"
-          className="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-800 transition"
-        >
-          <FaUser />
-          Profile
-        </Link>
-
-        <Link
-          to="/settings"
-          className="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-800 transition"
-        >
-          <FaCog />
-          Settings
-        </Link>
-      </nav>
-
-      <div className="p-5">
-        <button
-          onClick={logout}
-          className="w-full flex items-center justify-center gap-3 bg-red-600 hover:bg-red-700 py-3 rounded-xl"
-        >
-          <FaSignOutAlt />
-          Logout
-        </button>
-      </div>
-    </aside>
+        {/* Logout */}
+        <div className="absolute bottom-6 left-4 right-4">
+          <button
+            onClick={logout}
+            className="w-full bg-red-600 hover:bg-red-700 transition py-3 rounded-xl flex items-center justify-center gap-3 font-semibold"
+          >
+            <FaSignOutAlt />
+            Logout
+          </button>
+        </div>
+      </aside>
+    </>
   );
 }
-
-export default Sidebar;

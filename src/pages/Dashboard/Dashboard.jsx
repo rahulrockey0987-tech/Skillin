@@ -5,71 +5,56 @@ import Sidebar from "./Sidebar";
 import Topbar from "./Topbar";
 import StatCard from "./StatCard";
 
-function Dashboard() {
-  const user = JSON.parse(localStorage.getItem("user"));
+export default function Dashboard() {
+  const user = JSON.parse(localStorage.getItem("user")) || {};
+
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [stats, setStats] = useState({
     totalStudents: 0,
-    totalJobs: 0,
     totalCourses: 0,
+    totalJobs: 0,
     totalApplications: 0,
     pendingApplications: 0,
     acceptedApplications: 0,
     rejectedApplications: 0,
-    recentJobs: [],
-    recentApplications: [],
   });
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    fetchDashboard();
+    axios
+      .get("https://skillin-server.onrender.com/api/dashboard")
+      .then((res) => {
+        setStats(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
-
-  const fetchDashboard = async () => {
-    try {
-      const res = await axios.get(
-        "https://skillin-server.onrender.com/api/dashboard"
-      );
-
-      setStats(res.data);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="flex min-h-screen bg-slate-950 text-white">
-      <Sidebar />
 
-      <main className="flex-1 p-8 overflow-y-auto">
-        <Topbar />
+      <Sidebar
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
 
-        {/* Heading */}
-        <div className="mt-8">
+      <main className="flex-1 p-6 md:p-8 overflow-auto">
+
+        <Topbar setSidebarOpen={setSidebarOpen} />
+
+        <div className="mb-8">
           <h1 className="text-4xl font-bold">
-            Welcome back,
-            <span className="text-cyan-400">
-              {" "}
-              {user?.name || "Student"} 👋
-            </span>
+            Welcome {user.name || "Student"} 👋
           </h1>
 
           <p className="text-slate-400 mt-2">
-            Here's what's happening today.
+            Track your learning, internships and job applications.
           </p>
-
-          {loading && (
-            <div className="mt-5 bg-cyan-500/20 border border-cyan-500 rounded-xl p-4">
-              Loading Dashboard...
-            </div>
-          )}
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mt-10">
+        <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+
           <StatCard
             title="Students"
             value={stats.totalStudents}
@@ -104,134 +89,62 @@ function Dashboard() {
             title="Rejected"
             value={stats.rejectedApplications}
           />
+
         </div>
 
-        {/* Learning Progress */}
-        <div className="grid xl:grid-cols-3 gap-8 mt-10">
-          <div className="xl:col-span-2 bg-slate-900 rounded-2xl p-6">
-            <h2 className="text-2xl font-bold mb-8">
-              Learning Progress
+        <div className="grid lg:grid-cols-2 gap-6 mt-8">
+
+          <div className="bg-slate-900 rounded-2xl p-6">
+
+            <h2 className="text-2xl font-semibold mb-4">
+              Recent Activity
             </h2>
 
-            <div className="space-y-8">
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span>React Masterclass</span>
-                  <span>80%</span>
-                </div>
+            <ul className="space-y-4 text-slate-300">
 
-                <div className="w-full h-3 bg-slate-700 rounded-full">
-                  <div className="w-4/5 h-3 bg-cyan-400 rounded-full"></div>
-                </div>
-              </div>
+              <li>✅ Profile completed</li>
 
-              <div>
-                <div className="flex justify-between mb-2">
-                  <span>Node.js Backend</span>
-                  <span>65%</span>
-                </div>
+              <li>📚 Continue your enrolled courses</li>
 
-                <div className="w-full h-3 bg-slate-700 rounded-full">
-                  <div className="w-2/3 h-3 bg-green-400 rounded-full"></div>
-                </div>
-              </div>
+              <li>💼 Check latest job postings</li>
+
+              <li>🎓 Apply for internships</li>
+
+            </ul>
+
+          </div>
+
+          <div className="bg-slate-900 rounded-2xl p-6">
+
+            <h2 className="text-2xl font-semibold mb-4">
+              Quick Actions
+            </h2>
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <button className="bg-cyan-600 hover:bg-cyan-700 rounded-xl py-3">
+                View Courses
+              </button>
+
+              <button className="bg-green-600 hover:bg-green-700 rounded-xl py-3">
+                Find Jobs
+              </button>
+
+              <button className="bg-yellow-500 hover:bg-yellow-600 rounded-xl py-3 text-black font-semibold">
+                Internships
+              </button>
+
+              <button className="bg-purple-600 hover:bg-purple-700 rounded-xl py-3">
+                My Profile
+              </button>
+
             </div>
+
           </div>
 
-          {/* AI */}
-          <div className="bg-slate-900 rounded-2xl p-6">
-            <h2 className="text-2xl font-bold text-cyan-400">
-              AI Assistant
-            </h2>
-
-            <p className="text-slate-400 mt-4">
-              Ask anything about coding, placements,
-              interviews, resume building or career
-              guidance.
-            </p>
-
-            <button className="mt-8 w-full bg-cyan-500 hover:bg-cyan-600 py-3 rounded-xl font-semibold">
-              Open AI Assistant
-            </button>
-          </div>
         </div>
 
-        {/* Latest Jobs */}
-        <div className="grid lg:grid-cols-2 gap-8 mt-10">
-          <div className="bg-slate-900 rounded-2xl p-6">
-            <h2 className="text-2xl font-bold text-cyan-400 mb-6">
-              Latest Jobs
-            </h2>
-
-            {stats.recentJobs.length === 0 ? (
-              <p className="text-slate-400">
-                No jobs available.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {stats.recentJobs.map((job) => (
-                  <div
-                    key={job._id}
-                    className="border-b border-slate-700 pb-4"
-                  >
-                    <h3 className="font-semibold">
-                      {job.title}
-                    </h3>
-
-                    <p className="text-cyan-400">
-                      {job.company}
-                    </p>
-
-                    <p className="text-slate-400">
-                      {job.location}
-                    </p>
-
-                    <p className="text-green-400">
-                      {job.salary}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Applications */}
-          <div className="bg-slate-900 rounded-2xl p-6">
-            <h2 className="text-2xl font-bold text-cyan-400 mb-6">
-              Recent Applications
-            </h2>
-
-            {stats.recentApplications.length === 0 ? (
-              <p className="text-slate-400">
-                No applications found.
-              </p>
-            ) : (
-              <div className="space-y-4">
-                {stats.recentApplications.map((app) => (
-                  <div
-                    key={app._id}
-                    className="border-b border-slate-700 pb-4"
-                  >
-                    <h3 className="font-semibold">
-                      {app.user?.name}
-                    </h3>
-
-                    <p className="text-cyan-400">
-                      {app.job?.title}
-                    </p>
-
-                    <span className="text-sm text-slate-400">
-                      {app.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
       </main>
     </div>
   );
 }
-
-export default Dashboard;

@@ -1,3 +1,4 @@
+import Navbar from "../../components/layout/Navbar";
 import Hero from "../../components/home/Hero";
 import SearchSection from "../../components/home/SearchSection";
 import Companies from "../../components/home/Companies";
@@ -12,15 +13,20 @@ import Footer from "../../components/layout/Footer";
 export default function Home() {
   return (
     <>
-      <Hero />
-      <SearchSection />
-      <Companies />
-      <PopularCourses />
-      <Internships />
-      <LatestJobs />
-      <Stats />
-      <WhyChoose />
-      <CTA />
+      <Navbar />
+
+      <main style={{ paddingTop: "70px" }}>
+        <Hero />
+        <SearchSection />
+        <Companies />
+        <PopularCourses />
+        <Internships />
+        <LatestJobs />
+        <Stats />
+        <WhyChoose />
+        <CTA />
+      </main>
+
       <Footer />
     </>
   );

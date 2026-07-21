@@ -1,140 +1,77 @@
-import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
-import {
-  FaBars,
-  FaTimes,
-  FaSearch,
-  FaMoon,
-  FaUserCircle,
-} from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 export default function Navbar() {
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
+    const theme = localStorage.getItem("theme");
+    if (theme === "dark") {
+      document.body.style.background = "#0f172a";
+      document.body.style.color = "#fff";
+      setDarkMode(true);
+    }
   }, []);
 
-  const links = [
-    { name: "Home", path: "/" },
-    { name: "About", path: "/about" },
-    { name: "Courses", path: "/courses" },
-    { name: "Internships", path: "/internships" },
-    { name: "Jobs", path: "/jobs" },
-    { name: "Contact", path: "/contact" },
-  ];
+  const toggleTheme = () => {
+    if (darkMode) {
+      document.body.style.background = "#ffffff";
+      document.body.style.color = "#000";
+      localStorage.setItem("theme", "light");
+    } else {
+      document.body.style.background = "#0f172a";
+      document.body.style.color = "#fff";
+      localStorage.setItem("theme", "dark");
+    }
+    setDarkMode(!darkMode);
+  };
 
   return (
-    <header
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
-        scrolled
-          ? "bg-slate-950/95 backdrop-blur-xl border-b border-slate-800"
-          : "bg-slate-950"
-      }`}
+    <nav
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "70px",
+        background: "#0F172A",
+        color: "#fff",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "0 40px",
+        zIndex: 1000,
+        boxSizing: "border-box",
+      }}
     >
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        {/* Logo */}
-        <NavLink
-          to="/"
-          onClick={() => setMenuOpen(false)}
-          className="text-3xl font-bold"
-        >
-          <span className="text-cyan-400">Skill</span>
-          <span className="text-white">In</span>
-        </NavLink>
+      <h2 style={{ margin: 0 }}>SkillIn</h2>
 
-        {/* Desktop Menu */}
-        <nav className="hidden lg:flex items-center gap-8">
-          {links.map((link) => (
-            <NavLink
-              key={link.name}
-              to={link.path}
-              className={({ isActive }) =>
-                isActive
-                  ? "text-cyan-400 font-semibold"
-                  : "text-white hover:text-cyan-400 transition"
-              }
-            >
-              {link.name}
-            </NavLink>
-          ))}
-        </nav>
+      <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+        <Link to="/" style={linkStyle}>Home</Link>
+        <Link to="/courses" style={linkStyle}>Courses</Link>
+        <Link to="/internships" style={linkStyle}>Internships</Link>
+        <Link to="/jobs" style={linkStyle}>Jobs</Link>
+        <Link to="/login" style={linkStyle}>Login</Link>
+        <Link to="/register" style={linkStyle}>Register</Link>
 
-        {/* Desktop Right */}
-        <div className="hidden lg:flex items-center gap-5">
-          <FaSearch className="text-white hover:text-cyan-400 cursor-pointer" />
-          <FaMoon className="text-white hover:text-cyan-400 cursor-pointer" />
-
-          <NavLink to="/login">
-            <FaUserCircle className="text-3xl text-cyan-400 hover:scale-110 transition" />
-          </NavLink>
-
-          <NavLink to="/register">
-            <button className="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold">
-              Register
-            </button>
-          </NavLink>
-        </div>
-
-        {/* Mobile Menu Button */}
         <button
-          className="lg:hidden text-2xl text-white"
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={toggleTheme}
+          style={{
+            padding: "8px 14px",
+            borderRadius: "8px",
+            border: "none",
+            cursor: "pointer",
+          }}
         >
-          {menuOpen ? <FaTimes /> : <FaBars />}
+          {darkMode ? "☀ Light" : "🌙 Dark"}
         </button>
       </div>
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="lg:hidden bg-slate-950 border-t border-slate-800">
-
-          {links.map((link) => (
-            <NavLink
-              key={link.name}
-              to={link.path}
-              onClick={() => setMenuOpen(false)}
-              className={({ isActive }) =>
-                `block px-6 py-4 ${
-                  isActive
-                    ? "bg-slate-800 text-cyan-400"
-                    : "text-white hover:bg-slate-800"
-                }`
-              }
-            >
-              {link.name}
-            </NavLink>
-          ))}
-
-          <div className="flex justify-center gap-8 py-5 border-t border-slate-800">
-            <FaSearch className="text-white text-xl cursor-pointer hover:text-cyan-400" />
-            <FaMoon className="text-white text-xl cursor-pointer hover:text-cyan-400" />
-          </div>
-
-          <div className="px-6 pb-6 flex flex-col gap-4">
-
-            <NavLink to="/login" onClick={() => setMenuOpen(false)}>
-              <button className="w-full py-3 rounded-xl border border-cyan-500 text-cyan-400 font-semibold">
-                Login
-              </button>
-            </NavLink>
-
-            <NavLink to="/register" onClick={() => setMenuOpen(false)}>
-              <button className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-semibold">
-                Register
-              </button>
-            </NavLink>
-
-          </div>
-        </div>
-      )}
-    </header>
+    </nav>
   );
 }
+
+const linkStyle = {
+  color: "#fff",
+  textDecoration: "none",
+  fontWeight: "600",
+};
